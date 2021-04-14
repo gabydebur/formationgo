@@ -31,12 +31,13 @@ func afficherPartie() {
 }
 
 func Initialize() {
-	var numCase int = 1
-	for i := 0; i < maxline; i++ {
-		for j := 0; j < maxColonne; j++ {
+	var numeroCase int = 1
+	var i, j int
+	for i = 0; i < maxline; i++ {
+		for j = 0; j < maxColonne; j++ {
 			partie[i][j] = 3
-			numCase[i][j] = numCase
-			numCase++
+			numCase[i][j] = numeroCase
+			numeroCase++
 		}
 	}
 }
