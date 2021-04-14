@@ -1,5 +1,12 @@
 package main
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+)
+
 const (
 	maxline    int = 3
 	maxColonne int = 3
@@ -38,8 +45,10 @@ func Initialize() {
 			partie[i][j] = 3
 			numCase[i][j] = numeroCase
 			numeroCase++
+			print("-")
 		}
 	}
+	println("")
 }
 
 func gagner() bool {
@@ -144,10 +153,20 @@ func Lapartie() {
 	var joueur1, joueur2, joueurActuel string
 	var indiceJoueur int
 	var reponse int
+
 	//Récupérer le nom des joueurs
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("Joueur 1, Entrez votre nom : ")
+	scanner.Scan()
+	joueur1 := scanner.Text()
+	fmt.Print("Joueur 2, Entrez votre nom : ")
+	scanner.Scan()
+	joueur2 := scanner.Text()
 
 	//Init de la partie
+	println("Initialisation de la partie ! ")
 	Initialize()
+	println("Initialisation complète!! Début de la partie !!! Bon amusement !")
 
 	//Lancement de la partie
 
@@ -161,18 +180,44 @@ func Lapartie() {
 		}
 		afficherPartie()
 		println(joueurActuel, " Quelle est la case choisie ? ")
-		switch {
-		case reponse > nbCoupMax || reponse < 0:
-			println("choix impossible ! ")
-		default:
-			if choixCase(reponse, indiceJoueur, partie, numCase) {
-				nbCoup++
+		scanner.Scan()
+		reponse, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			prinln("Ce n'est pas un choix valide !!!")
+		}else {
+			switch {
+			case reponse > nbCoupMax || reponse < 0:
+				println("choix impossible ! ")
+			default:
+				if choixCase(reponse, indiceJoueur, partie, numCase) {
+					nbCoup++
+				}
 			}
-		}
 	}
 
 }
 
 func main() {
-
+	scanner := bufio.NewScanner(os.Stdin)
+	var choix int = 0
+	println("Bienvenue au jeu du morpion by Gaby")
+	for choix == 2 {
+		println("1 => Lancement de la partie")
+		println("2 => Quitter ! ")
+		println("Quelle est votre choix ? ")
+		scanner.Scan()
+		choix, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			prinln("Ce n'est pas un choix valide !!!")
+		}else {
+			switch choix {
+			case 1:
+				Lapartie()
+			case 2:
+				println("Au revoir")	
+			default:
+				println("Choix invalide!! Faire un autre choix ! ")
+			}
+		}
+	}
 }
