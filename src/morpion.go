@@ -106,11 +106,11 @@ func gagner() bool {
 					//Deuxième cas : la diagonale opposé celle où on vérifie partie[i+1,j-1] doit être égale à partie[i, j] en commencant par i=0 et j=maxcolonne-1
 					ligne = 0
 					colonne = maxColonne - 1
-					for ligne < maxline && colonne < 1 && partie[ligne+1][colonne-1] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
+					for ligne < maxline-1 && partie[ligne+1][colonne-1] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
 						ligne++
 						colonne--
 					}
-					if ligne == maxline && colonne == 0 {
+					if ligne == maxline-1 && colonne == 0 {
 						gagne = true // On a parcouru la diagonale et on a eu la même chose sur la diagonale
 					}
 				}
