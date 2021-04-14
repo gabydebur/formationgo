@@ -68,14 +68,11 @@ func gagner() bool {
 			//println("colonne++", colonne)
 		}
 		if colonne == maxColonne {
-			println("ca veut dire que la ligne est plein de la même valeur")
 			gagne = true // On a fait la ligne et on a trouvé la même valeur dans chaque case différent de 3, le joueur a gagné, on retourne true.
 		} else {
-			println("ligne suivante")
 			ligne++ // sinon on fait la même chose pour la ligne suivante.
 		}
 	}
-	println("on a sorti de la boucle de vérification des lignes")
 	if !gagne {
 		// On arrive ici, on a vérifier qu'aune ligne n'était remplie avec la même valeur. On va faire la même chose mais avec les colonnes.
 		ligne, colonne = 1, 0 //Réinitialisation des variables.
@@ -96,32 +93,31 @@ func gagner() bool {
 			*/
 			if maxColonne != maxline {
 				gagne = false //différent : on retourne false
-			}
+			} else {
+				//premier cas : cas où ligne=colonne
+				ligne = 1 //réinitialisation.
+				for ligne < maxline && partie[ligne-1][ligne-1] == partie[ligne][ligne] && partie[ligne][ligne] != 3 {
+					ligne++
+				}
 
-			//premier cas : cas où ligne=colonne
-			ligne = 1 //réinitialisation.
-			for partie[ligne-1][ligne-1] == partie[ligne][ligne] && partie[ligne][ligne] != 3 {
-				ligne++
-			}
-
-			if ligne == maxline {
-				gagne = true // la diagonale est gagnante
-			}
-
-			//Deuxième cas : la diagonale opposé celle où on vérifie partie[i+1,j-1] doit être égale à partie[i, j] en commencant par i=0 et j=maxcolonne-1
-			ligne = 0
-			colonne = maxColonne - 1
-			for partie[ligne+1][colonne-1] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
-				ligne++
-				colonne--
-			}
-			if ligne == maxline && colonne == 0 {
-				gagne = true // On a parcouru la diagonale et on a eu la même chose sur la diagonale
+				if ligne == maxline {
+					gagne = true // la diagonale est gagnante
+				} else {
+					//Deuxième cas : la diagonale opposé celle où on vérifie partie[i+1,j-1] doit être égale à partie[i, j] en commencant par i=0 et j=maxcolonne-1
+					ligne = 0
+					colonne = maxColonne - 1
+					for ligne < maxline && colonne < 1 && partie[ligne+1][colonne-1] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
+						ligne++
+						colonne--
+					}
+					if ligne == maxline && colonne == 0 {
+						gagne = true // On a parcouru la diagonale et on a eu la même chose sur la diagonale
+					}
+				}
 			}
 		}
 	}
-	println("On retourne si la partie est gagné ou pas ", gagne)
-
+	//	println("On retourne si la partie est gagné ou pas ", gagne)
 	return gagne // on retourne gagne qui contient la solution.
 
 }
@@ -191,7 +187,7 @@ func Lapartie() {
 
 	//Lancement de la partie
 
-	for !gagner() || nbCoup <= nbCoupMax {
+	for !gagner() && nbCoup <= nbCoupMax {
 		if nbCoup%2 == 0 {
 			joueurActuel = joueur2
 			indiceJoueur = 2
@@ -216,6 +212,7 @@ func Lapartie() {
 			}
 		}
 	}
+	afficherPartie()
 	if gagner() {
 		println(joueurActuel, " a gagné !! Bravo à lui ! !!")
 	} else {
