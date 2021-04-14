@@ -56,9 +56,11 @@ func Initialize() {
 	println("")
 }
 
+// un peu complexe, a diviser en 3 fonctions par exemple checkWinLine, checkWinColumn, checkWinDiagonale
 func gagner() bool {
 	var (
 		gagne          bool = false //On changera la valeur dès qu'on a une condition trouvée.
+		//perso j'aurais init les deux a 0 et j'aurais fait +1 au lieu de -1 dans les for, c'est plus comprehensible je pense
 		ligne, colonne int  = 0, 1
 	)
 	// première étape : vérifier qu'il n'y a pas une ligne gagnante.
@@ -68,11 +70,13 @@ func gagner() bool {
 			//println("colonne++", colonne)
 		}
 		if colonne == maxColonne {
+			// return true , comme ça tu peux supprimer les if !gagne en dessous, ça simplifie le code
 			gagne = true // On a fait la ligne et on a trouvé la même valeur dans chaque case différent de 3, le joueur a gagné, on retourne true.
 		} else {
 			ligne++ // sinon on fait la même chose pour la ligne suivante.
 		}
 	}
+	// a supprimer cf commentaire au dessus
 	if !gagne {
 		// On arrive ici, on a vérifier qu'aune ligne n'était remplie avec la même valeur. On va faire la même chose mais avec les colonnes.
 		ligne, colonne = 1, 0 //Réinitialisation des variables.
@@ -81,12 +85,13 @@ func gagner() bool {
 				ligne++
 			}
 			if ligne == maxline {
+				// return true , comme ça tu peux supprimer les if !gagne en dessous, ça simplifie le code
 				gagne = true // On a fait la colonne et on a trouvé que la colonne était remplie avec la même valeur différente de 3, le joueur a gagné, on retourne true
 			} else {
 				colonne++ // sinon, on avance à la colonne suivante.
 			}
 		}
-
+		// a supprimer cf commentaire au dessus
 		if !gagne {
 			/*Arrivé ici, aucune ligne et aucune colonne n'est gagnante. On va vérifier la dernière façon de gagner : les deux diagonales.
 			Il faut vérifier d'abord que nous sommes dans un carré sinon cela ne fonctionne pas.
@@ -117,6 +122,7 @@ func gagner() bool {
 			}
 		}
 	}
+	// ici ça devient juste return false, vu qu'a chaque fois que la condition de victoire etait remplis on aura return true directement
 	//	println("On retourne si la partie est gagné ou pas ", gagne)
 	return gagne // on retourne gagne qui contient la solution.
 
