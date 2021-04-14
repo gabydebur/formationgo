@@ -24,13 +24,16 @@ func afficherPartie() {
 	for i := 0; i < maxline; i++ {
 		//Affichage ligne par ligne.
 		for j := 0; j < maxColonne; j++ {
-			println("partie i et j :", i, j, partie[i][j])
+			//println("partie i et j :", i, j, partie[i][j])
 			switch partie[i][j] {
 			case 3:
+				//println("pas de joueur'")
 				print(compteurCase, " ")
 			case 2:
+				//println("joueur 2")
 				print("X ")
 			case 1:
+				//println("joueur1")
 				print("O ")
 			}
 			compteurCase++
@@ -59,28 +62,32 @@ func gagner() bool {
 		ligne, colonne int  = 0, 1
 	)
 	// première étape : vérifier qu'il n'y a pas une ligne gagnante.
-	for ligne < maxline {
-		for partie[ligne][colonne-1] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
+	for ligne < maxline && !gagne {
+		for colonne < maxColonne && partie[ligne][colonne-1] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
 			colonne++
+			//println("colonne++", colonne)
 		}
 		if colonne == maxColonne {
+			println("ca veut dire que la ligne est plein de la même valeur")
 			gagne = true // On a fait la ligne et on a trouvé la même valeur dans chaque case différent de 3, le joueur a gagné, on retourne true.
+		} else {
+			println("ligne suivante")
+			ligne++ // sinon on fait la même chose pour la ligne suivante.
 		}
-		ligne++ // sinon on fait la même chose pour la ligne précédente.
 	}
-
+	println("on a sorti de la boucle de vérification des lignes")
 	if !gagne {
 		// On arrive ici, on a vérifier qu'aune ligne n'était remplie avec la même valeur. On va faire la même chose mais avec les colonnes.
 		ligne, colonne = 1, 0 //Réinitialisation des variables.
-		for colonne < maxColonne {
-			for partie[ligne-1][colonne] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
+		for colonne < maxColonne && !gagne {
+			for ligne < maxline && partie[ligne-1][colonne] == partie[ligne][colonne] && partie[ligne][colonne] != 3 {
 				ligne++
 			}
 			if ligne == maxline {
 				gagne = true // On a fait la colonne et on a trouvé que la colonne était remplie avec la même valeur différente de 3, le joueur a gagné, on retourne true
+			} else {
+				colonne++ // sinon, on avance à la colonne suivante.
 			}
-			colonne++ // sinon, on avance à la colonne suivante.
-
 		}
 
 		if !gagne {
@@ -113,39 +120,43 @@ func gagner() bool {
 			}
 		}
 	}
+	println("On retourne si la partie est gagné ou pas ", gagne)
 
 	return gagne // on retourne gagne qui contient la solution.
 
 }
 
-func choixCase(numCase int, joueur int, partie [maxline][maxColonne]int, tabCase [maxline][maxColonne]int) bool {
+func choixCase(numeroCase int, joueur int) bool {
 	//Récupération de l'indice du numéro de case en fonction du numCase
 	var (
 		ligne, colonne int = 0, 0
 		reponse        bool
 		trouve         bool = false
 	)
-
+	//println("numcase", numeroCase, " et indice joueur :", joueur)
 	for ligne < maxline && !trouve {
-		println("ligne : ", ligne)
+		//println("ligne : ", ligne)
 		colonne = 0
 		for colonne < maxColonne && !trouve {
-			println("colone: ", colonne)
-			if tabCase[ligne][colonne] == numCase {
-				println("jai trouvé !")
+			//println("colone: ", colonne)
+			if numCase[ligne][colonne] == numeroCase {
+				//println("jai trouvé !")
 				trouve = true
+			} else {
+				colonne++
 			}
-			colonne++
 		}
-		ligne++
+		if !trouve {
+			ligne++
+		}
 	}
 
-	println("Après la boucle, ligne et colonne : ", ligne, colonne)
+	//println("Après la boucle, ligne et colonne : ", ligne, colonne)
 	if trouve {
 		if partie[ligne][colonne] == 3 {
-			println("Case pas prise ! affectation de la case pour le joueur")
+			//println("Case pas prise ! affectation de la case pour le joueur")
 			partie[ligne][colonne] = joueur
-			println("case : ", partie[ligne][colonne])
+			//println("ligne, colonne, case : ", ligne, " ", colonne, " ", partie[ligne][colonne])
 			reponse = true
 		} else {
 			println("Case déjà prise, faut faire un autre choix ! ")
@@ -180,7 +191,7 @@ func Lapartie() {
 
 	//Lancement de la partie
 
-	for gagner() || nbCoup <= nbCoupMax {
+	for !gagner() || nbCoup <= nbCoupMax {
 		if nbCoup%2 == 0 {
 			joueurActuel = joueur2
 			indiceJoueur = 2
@@ -199,7 +210,7 @@ func Lapartie() {
 			case reponse > nbCoupMax || reponse < 0:
 				println("choix impossible ! ")
 			default:
-				if choixCase(reponse, indiceJoueur, partie, numCase) {
+				if choixCase(reponse, indiceJoueur) {
 					nbCoup++
 				}
 			}
