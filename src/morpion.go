@@ -24,6 +24,7 @@ func afficherPartie() {
 	for i := 0; i < maxline; i++ {
 		//Affichage ligne par ligne.
 		for j := 0; j < maxColonne; j++ {
+			println("partie i et j :", i, j, partie[i][j])
 			switch partie[i][j] {
 			case 3:
 				print(compteurCase, " ")
@@ -122,23 +123,36 @@ func choixCase(numCase int, joueur int, partie [maxline][maxColonne]int, tabCase
 	var (
 		ligne, colonne int = 0, 0
 		reponse        bool
+		trouve         bool = false
 	)
 
-	for ligne < maxline {
-		for colonne < maxColonne {
+	for ligne < maxline && !trouve {
+		println("ligne : ", ligne)
+		colonne = 0
+		for colonne < maxColonne && !trouve {
+			println("colone: ", colonne)
 			if tabCase[ligne][colonne] == numCase {
-				break // On arrête la boucle, on a trouvé la ligne et la colonne que l'on voulait.
+				println("jai trouvé !")
+				trouve = true
 			}
 			colonne++
 		}
 		ligne++
 	}
 
-	if partie[ligne][colonne] == 3 {
-		partie[ligne][colonne] = joueur
-		reponse = true
+	println("Après la boucle, ligne et colonne : ", ligne, colonne)
+	if trouve {
+		if partie[ligne][colonne] == 3 {
+			println("Case pas prise ! affectation de la case pour le joueur")
+			partie[ligne][colonne] = joueur
+			println("case : ", partie[ligne][colonne])
+			reponse = true
+		} else {
+			println("Case déjà prise, faut faire un autre choix ! ")
+			reponse = false
+		}
 	} else {
-		println("Case déjà prise, faut faire un autre choix ! ")
+		println("Pas trouvé la case ! ")
 		reponse = false
 	}
 	return reponse
