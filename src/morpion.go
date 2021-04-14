@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+//Pour le moment, je le mets en constante parce que j'ai pas encore vu les tableaux dynamique ! :p
 const (
 	maxline    int = 3
 	maxColonne int = 3
@@ -116,10 +117,6 @@ func gagner() bool {
 
 }
 
-func menu() {
-
-}
-
 func choixCase(numCase int, joueur int, partie [maxline][maxColonne]int, tabCase [maxline][maxColonne]int) bool {
 	//Récupération de l'indice du numéro de case en fonction du numCase
 	var (
@@ -152,16 +149,15 @@ func Lapartie() {
 	var nbCoup int = 1
 	var joueur1, joueur2, joueurActuel string
 	var indiceJoueur int
-	var reponse int
 
 	//Récupérer le nom des joueurs
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("Joueur 1, Entrez votre nom : ")
 	scanner.Scan()
-	joueur1 := scanner.Text()
+	joueur1 = scanner.Text()
 	fmt.Print("Joueur 2, Entrez votre nom : ")
 	scanner.Scan()
-	joueur2 := scanner.Text()
+	joueur2 = scanner.Text()
 
 	//Init de la partie
 	println("Initialisation de la partie ! ")
@@ -183,8 +179,8 @@ func Lapartie() {
 		scanner.Scan()
 		reponse, err := strconv.Atoi(scanner.Text())
 		if err != nil {
-			prinln("Ce n'est pas un choix valide !!!")
-		}else {
+			println("Ce n'est pas un choix valide !!!")
+		} else {
 			switch {
 			case reponse > nbCoupMax || reponse < 0:
 				println("choix impossible ! ")
@@ -193,31 +189,45 @@ func Lapartie() {
 					nbCoup++
 				}
 			}
+		}
 	}
+	if gagner() {
+		println(joueurActuel, " a gagné !! Bravo à lui ! !!")
+	} else {
+		println("Partie nulle ! Ce fut un beau match ! ")
+	}
+}
+
+func afficherMenuEtChoix() int {
+	scanner := bufio.NewScanner(os.Stdin)
+	var resultat int
+	println("MENU : ")
+	println("1 => Lancement de la partie")
+	println("2 => Quitter ! ")
+	println("Quelle est votre choix ? ")
+	scanner.Scan()
+	choix, err := strconv.Atoi(scanner.Text())
+	if err != nil {
+		resultat = 0
+	} else {
+		resultat = choix
+	}
+	return resultat
 
 }
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-	var choix int = 0
 	println("Bienvenue au jeu du morpion by Gaby")
-	for choix == 2 {
-		println("1 => Lancement de la partie")
-		println("2 => Quitter ! ")
-		println("Quelle est votre choix ? ")
-		scanner.Scan()
-		choix, err := strconv.Atoi(scanner.Text())
-		if err != nil {
-			prinln("Ce n'est pas un choix valide !!!")
-		}else {
-			switch choix {
-			case 1:
-				Lapartie()
-			case 2:
-				println("Au revoir")	
-			default:
-				println("Choix invalide!! Faire un autre choix ! ")
-			}
+	choix := afficherMenuEtChoix()
+	for choix != 2 {
+		switch choix {
+		case 1:
+			Lapartie()
+			choix = afficherMenuEtChoix()
+		default:
+			println("Choix invalide!! Faire un autre choix ! ")
+			choix = afficherMenuEtChoix()
 		}
 	}
+	println("Au Revoir !!! :) ")
 }
